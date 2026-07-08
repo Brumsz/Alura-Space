@@ -55,7 +55,7 @@ class CadastroForms(forms.Form):
         max_length=70,
         widget=forms.PasswordInput(
             attrs={
-                'class': 'form-group',
+                'class': 'form-control',
                 'placeholder': 'Digite a sua senha',
             }
         ),
@@ -67,11 +67,29 @@ class CadastroForms(forms.Form):
         max_length=70,
         widget=forms.PasswordInput(
             attrs={
-                'class': 'form-group',
+                'class': 'form-control',
                 'placeholder': 'Digite a sua novamente',
             }
         ),
     )
 
+    def clean_nome_cadastro(self):
+        nome = self.cleaned_data.get('nome_cadastro')
 
+        if nome:
+            nome = nome.strip()
+            if ' ' in nome:
+                raise forms.ValidationError('Espaços não são permitidos neste espaço')
+            else:
+                return nome
+    
+    def clean_senha_confirmada(self):
+         senha = self.cleaned_data.get('senha')
+         senha_confirmada = self.cleaned_data.get('senha_confirmada')
+
+         if senha != senha_confirmada:
+              raise forms.ValidationError('Senhas não são iguais')
+         else:
+             return senha_confirmada
+         
 
